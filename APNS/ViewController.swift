@@ -15,10 +15,10 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let center = UNUserNotificationCenter.current()
+       /* let center = UNUserNotificationCenter.current()
         center.requestAuthorization(options: [.alert, .sound]) { (granted, error) in
             // Enable or disable features based on authorization.
-        }
+        }*/
         if #available(iOS 10.0, *) {
             // For iOS 10 display notification (sent via APNS)
         UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
@@ -32,7 +32,7 @@ class ViewController: UIViewController {
                 UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
             application.registerUserNotificationSettings(settings)
         }
-        //pusher
+        
         
         application.registerForRemoteNotifications()
     }
