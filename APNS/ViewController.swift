@@ -32,6 +32,7 @@ class ViewController: UIViewController {
                 UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
             application.registerUserNotificationSettings(settings)
         }
+        //pusher
         
         application.registerForRemoteNotifications()
     }
