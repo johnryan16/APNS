@@ -9,16 +9,42 @@
 import UIKit
 import Firebase
 import UserNotifications
+import FirebaseMessaging
+
+
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
 
     var window: UIWindow?
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        
+       
+        if #available(iOS 10.0, *) {
+            
+            let center = UNUserNotificationCenter.current()
+            center.requestAuthorization(options: [.alert, .badge, .sound]) { (granted, error) in
+                // Enable or disable features based on authorization
+            }
+            application.registerForRemoteNotifications()
+        } else {
+            func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+                
+                print("i am not available in simulator \(error)")
+            }
+        }
         FirebaseApp.configure()
+        
         return true
+    }
+    
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        
+        let deviceTokenString = deviceToken.reduce("", {$0 + String(format: "%02X", $1)})
+        print(deviceTokenString)
+        
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
