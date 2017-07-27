@@ -97,9 +97,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         debugPrint("didRegister notificationSettings")
-        if (UNNotificationAction.options)
+        if (UNNotificationAction.options) {
+    
+        }
     }
-    }
+    
+    
 
     
     
