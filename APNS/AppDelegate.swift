@@ -147,6 +147,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate, UNUser
         return true
     }
     
+    func applicationWillResignActive(_ application: UIApplication) {
+        debugPrint("###> 1.3 AppDelegate applicationWillResignActive")
+    }
+    
     func applicationWillTerminate(_ application: UIApplication) {
         debugPrint("###> 1.3 AppDelegate applicationWillTerminate")
     }
