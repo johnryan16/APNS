@@ -8,12 +8,11 @@
 
 import UIKit
 import UserNotifications
-import FirebaseMessaging
 import Firebase
 
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate, UNUserNotificationCenterDelegate {
     func messaging(_ messaging: Messaging, didRefreshRegistrationToken fcmToken: String) {
         debugPrint("--->messaging:\(messaging)")
         debugPrint("--->didRefreshRegistrationToken:\(fcmToken)")
@@ -48,11 +47,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
                 }
        application.registerForRemoteNotifications()
       */
+        debugPrint("### 1 AppDelegate didFinishLaunchingWithOptions")
+        self.initializeFCM(application)
+        let toke = InstanceID.instanceID().token()
+        
+        debugPrint("GCM TOKEN (dev's) = \(String(describing: toke))")
         
         let token = Messaging.messaging().fcmToken
-        print("Current FCM-Token is \(token ?? "")")
+        print("Current FCM-Token (mine) is \(token ?? "")")
        
         return true
+    }
+    
+    func applicationDidEnterBackground(_ application: UIApplication) {
+        //FIRMessaging.messaging().disconnect()
+        
+        debugPrint("###> 1.2 AppDelegate DidEnterBackground")
+        //        self.doServiceTry()
     }
   
     func applicationDidBecomeActive(_ application: UIApplication) {
@@ -91,45 +102,62 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
         
         
         FirebaseApp.configure()
+        Messaging.messaging().delegate = self
         Messaging.messaging().shouldEstablishDirectChannel = true
     }
     //----------------------------------------------------------------------------------------------------------------
     
-    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-        debugPrint("didRegister notificationSettings")
-        if (UNNotificationAction.options) {
     
-        }
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        //Handle on Background
+        debugPrint("*** didReceive response Notification ")
+        debugPrint("*** response: \(response)")
     }
     
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        //Handle in App Foreground
+        debugPrint("*** willPresent notification")
+        debugPrint("*** notification: \(notification)")
+    }
+ 
+  
     
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        debugPrint("didRegisterForRemoteNotificationsWithDeviceToken: DATA")
+        let tokens = String(format: "%@", deviceToken as CVarArg)
+        debugPrint("*** deviceToken: \(tokens)")
+        Messaging.messaging().apnsToken = deviceToken
+        debugPrint("Firebase Token:",InstanceID.instanceID().token() as Any)
+    }
 
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        Messaging.messaging().appDidReceiveMessage(userInfo)
+        
+        if let messageID = userInfo["gcm.message_id"] {
+            debugPrint("Message ID: \(messageID)")
+        }
+        print(userInfo)
+    }
+    
+    func application(_ application: UIApplication, shouldSaveApplicationState coder: NSCoder) -> Bool {
+        return true
+    }
+    
+    func application(_ application: UIApplication, shouldRestoreApplicationState coder: NSCoder) -> Bool {
+        return true
+    }
+    
+    func applicationWillTerminate(_ application: UIApplication) {
+        debugPrint("###> 1.3 AppDelegate applicationWillTerminate")
+    }
+    
+//----------------------------------------MESSAGING--END---------------------------------------------
+    
+    
+    
     
     
 } //    LAST brace of class AppDelegate
-    
-    
-
-
-
-   
-    
-    
-  
-
-
-@available(iOS 10, *)
-extension AppDelegate : UNUserNotificationCenterDelegate {
-    
-    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        let userInfo = notification.request.content.userInfo
-        print("Message ID: \(userInfo["gcm.message_id"]!)")
-        
-        print("%@", userInfo)
-    }
-}
-
-
 
 
 
