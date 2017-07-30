@@ -12,11 +12,13 @@ import Firebase
 
 class ViewController: UIViewController {
 
-    @IBOutlet weak var signInSelector: UISegmentedControl!
-    @IBOutlet weak var signInLabel: UILabel!
-    @IBOutlet weak var emailTextField: UITextField!
-    @IBOutlet weak var passwordTextField: UITextField!
-    @IBOutlet weak var signInButton: UIButton!
+   
+    @IBOutlet weak var signingInSelector: UISegmentedControl!
+    @IBOutlet weak var signingInLabel: UILabel!
+    @IBOutlet weak var emailsTextField: UITextField!
+    @IBOutlet weak var passwordsTextField: UITextField!
+    @IBOutlet weak var signingInButton: UIButton!
+    
     
     var isSignIn:Bool = true
     
@@ -31,26 +33,26 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 
-    @IBAction func signInSelectorChanged(_ sender: UISegmentedControl) {
+    @IBAction func signingInSelectorChanged(_ sender:  UISegmentedControl) {
         
         //flip the bool
         isSignIn = !isSignIn
         
         // check the book & Set sign in & labels
         if  isSignIn {
-            signInLabel.text = "Sign In"
-            signInButton.setTitle("Sign In", for: .normal)
+            signingInLabel.text = "Sign In"
+            signingInButton.setTitle("Sign In", for: .normal)
         } else {
-            signInLabel.text = "Register"
-            signInButton.setTitle("Register", for: .normal)
+            signingInLabel.text = "Register"
+            signingInButton.setTitle("Register", for: .normal)
         }
     }
     
-    @IBAction func signInButtonTapped(_ sender: UIButton) {
+    @IBAction func signingInButtonTapped(_ sender: UIButton) {
     
         //TODO: Do some form validation first
         
-        if let email = emailTextField.text, let pass = passwordTextField.text {
+        if let email = emailsTextField.text, let pass = passwordsTextField.text {
           //Check if sign in or register
             if isSignIn {
                 //sign in user with firebase
@@ -82,8 +84,8 @@ class ViewController: UIViewController {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
        //Dismiss keyboard when view is tapped on
-        emailTextField.resignFirstResponder()
-        passwordTextField.resignFirstResponder()
+        emailsTextField.resignFirstResponder()
+        passwordsTextField.resignFirstResponder()
     }
 
 }     // last brace of ViewController class
